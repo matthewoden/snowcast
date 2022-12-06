@@ -1,6 +1,5 @@
 import { middyfy } from '@libs/lambda';
-import { addReminder, sendMessage } from '@libs/notification';
-import { DateTime } from 'luxon';
+import { sendMessage } from '@libs/notification';
 import { getHourlyForecast, getSummary } from '@libs/openweather';
 import { response } from '@libs/response';
 
