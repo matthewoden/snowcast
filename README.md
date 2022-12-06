@@ -2,8 +2,13 @@
 
 I need to make sure that my sidewalk is salted and cleared, but I don't always remember to check the weather.
 
-I wrote this service to gather the next 48 hours from [OpenWeather](https://openweathermap.org/api/one-call-3), and create a precipitation summary for St. Louis every day at 6pm. If there's a need for immediate action -- such as currently snowing/raining or there will be overnight precipitation, a reminder is added to my phone at a time when I'll be able to do that (for example, at 8pm)
-## Example Output
+Using AWS Lambda, I wrote two functions:
+
+1. create a precipitation summary for St. Louis every day at 6pm, using hourly forecasts from [OpenWeather](https://openweathermap.org/api/one-call-3).
+2. handle any need for immediate action -- polling for snow over a given period of time, and set a reminder to salt and shovel where appropriate. (for example, at 8pm and at noon.)
+
+The forecast goes out daily, and looks for all precipitation. The reminders integration only looks for windows where the temperature is below freezing.
+## Example Forecast Output
 
 Each window of precipitation has the start date, end date, precipitation type, and
 lowest temperature. If a window happens on the same day, or overnight, the range
@@ -24,6 +29,8 @@ Thu, 5AM - 9AM
 Rain (100%) | 52°F
 ```
 
+Example Reminder: `Shovel and Salt - Snowcast detected wintry weather: Tue 2PM - 3PM`
+
 ## Dependencies
 
 ### Infrastructure
@@ -36,7 +43,7 @@ This uses Twilio for SMS. I could have used SNS with AWS, but I have twilio cred
 
 Adding reminders is done via IFTTT's app to integrate with iOS notifications, but you could do it with android just as easily. The lambda calls a webhook with the snowcast event, and my applet uses that to trigger a reminder for that day.
 
-You can create your own, or [use the one I built](https://ifttt.com/applets/rwA53x6W-when-a-webhook-gets-the-snowcast-event-add-a-reminder-to-salt-and-shovel)
+Unfortunately, IFTTT says that applets using webhooks cannot be published, otherwise I'd share mine.
 
 ## Installation/deployment instructions
 

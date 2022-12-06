@@ -16,10 +16,16 @@ export async function sendMessage(message: string) {
 }
 
 
-export async function addReminder() {
+export async function addReminder(reminderTime: string, snowTime: string) {
   console.log(`IFTTT: calling webhook`)
+  const event = 'snowcast'
+  const baseUrl = `https://maker.ifttt.com/trigger/${event}/with/key`
 
-  const {body} = await agent.get(`https://maker.ifttt.com/trigger/snowcast/with/key/${process.env.IFTTT_WEBHOOK_KEY}`)
+  console.log(reminderTime, snowTime)
+  const {body} = await agent
+    .get(`${baseUrl}/${process.env.IFTTT_WEBHOOK_KEY}`)
+    .query({ value1: reminderTime, value2: `Snowcast detected wintry weather: ${snowTime}` })
 
+  console.log(body)
   return body
 }

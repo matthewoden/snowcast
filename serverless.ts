@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
 import weather from '@functions/weather';
+import reminder from '@functions/reminder';
 
 const serverlessConfiguration: AWS = {
   service: 'snowcast',
@@ -15,7 +16,7 @@ const serverlessConfiguration: AWS = {
     },
   },
   // import the function via paths
-  functions: { weather },
+  functions: { weather, reminder },
   package: { individually: true },
   custom: {
     esbuild: {

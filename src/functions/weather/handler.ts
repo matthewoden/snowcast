@@ -1,53 +1,18 @@
 import { middyfy } from '@libs/lambda';
-import agent from 'superagent';
-import summary from './summary'
-import { addReminder, sendMessage } from './notification';
+import { addReminder, sendMessage } from '@libs/notification';
 import { DateTime } from 'luxon';
+import { getHourlyForecast, getSummary } from '@libs/openweather';
+import { response } from '@libs/response';
 
-const coordinates = {
-  lat: process.env.LATITUDE,
-  lon: process.env.LONGITUDE,
-}
 
-const response = (status, message) => {
-  return {
-    statusCode: status,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      message: message,
-    })
-  }
-}
 
 const weather = async () => {
   try {
     console.log('Fetching the local weather forecast...');
-    const {body: {hourly, daily}} = await agent
-      .get(`https://api.openweathermap.org/data/3.0/onecall`)
-      .query({
-          ...coordinates,
-          appId: process.env.OPENWEATHER_KEY,
-          units: 'imperial',
-          exclude: 'minutely,alerts'
-        });
 
-    const precipitation = summary(hourly)
-    const message = precipitation.map(h => h.message).join('\n').trim() || 'No precipitation in the next 48 hours.'
-
-    const now = DateTime.now().setZone('America/Chicago')
-    if (precipitation.length > 0) {
-      // if there's precipitation later today, or overnight, send a reminder
-      const found = precipitation.find(({startDate, endDate, lowTemp}) =>
-        (startDate.diff(now).as('hours') < 16 || endDate.diff(now).as('hours') < 16) && lowTemp <= 32
-      )
-      if (found) {
-        await addReminder()
-      }
-    }
-
-
+    const hourly = await getHourlyForecast()
+    const summary = getSummary(hourly)
+    const message = summary.map(h => h.message).join('\n').trim() || 'No precipitation in the next 48 hours.'
 
     await sendMessage(`Weather: \n${message}`)
     return response(200, message)

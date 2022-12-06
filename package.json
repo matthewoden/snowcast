@@ -4,7 +4,8 @@
   "description": "Serverless aws-nodejs-typescript template",
   "main": "serverless.ts",
   "scripts": {
-    "dev": "npx sls invoke local -f weather --path src/functions/weather/mock.json",
+    "dev:weather": "npx sls invoke local -f weather --path src/functions/weather/mock.json",
+    "dev:reminder": "npx sls invoke local -f reminder --path src/functions/reminder/mock.json",
     "deploy": "npx sls deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
