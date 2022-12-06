@@ -10,7 +10,16 @@ type Hourly = {
   }[];
 };
 
-const summary = (hourly: Hourly[]): string => {
+type WindowRange = {
+  startDate: DateTime;
+  endDate: DateTime;
+  lowTemp: number;
+  message: string;
+};
+
+
+
+const summary = (hourly: Hourly[]): WindowRange[] => {
     return hourly.map(({dt, temp, weather, pop}) => {
     const date = DateTime.fromSeconds(dt, {zone: 'utc'}).setZone('America/Chicago');
     const day = date.toFormat('EEE')
@@ -70,8 +79,13 @@ const summary = (hourly: Hourly[]): string => {
         range = `${startDay}, ${startTime} - ${endTime}`
       }
     }
-    return `${range} \n${main} (${chanceOfPrecipitation}%) | ${lowTemp}°F\n`
-  }).join('\n')
+    return {
+      startDate,
+      endDate,
+      lowTemp,
+      message: `${range} \n${main} (${chanceOfPrecipitation}%) | ${lowTemp}°F\n`
+    }
+  })
 }
 
 export default summary

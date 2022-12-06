@@ -34,7 +34,10 @@ const serverlessConfiguration: AWS = {
           'TWILIO_SID',
           'TWILIO_AUTH',
           'TWILIO_NUMBER',
-          'OPENWEATHER_KEY'
+          'OPENWEATHER_KEY',
+          'IFTTT_WEBHOOK_KEY',
+          'LATITUDE',
+          'LONGITUDE',
         ]
       }
     }
