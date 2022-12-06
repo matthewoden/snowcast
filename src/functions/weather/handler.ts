@@ -39,8 +39,9 @@ const weather = async () => {
     const now = DateTime.now().setZone('America/Chicago')
     if (precipitation.length > 0) {
       // if there's precipitation later today, or overnight, send a reminder
-      const found = precipitation.find(({startDate, endDate}) =>
-        startDate.diff(now).as('hours') < 16 || endDate.diff(now).as('hours') < 16)
+      const found = precipitation.find(({startDate, endDate, lowTemp}) =>
+        (startDate.diff(now).as('hours') < 16 || endDate.diff(now).as('hours') < 16) && lowTemp <= 32
+      )
       if (found) {
         await addReminder()
       }
