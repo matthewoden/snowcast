@@ -40,20 +40,18 @@ type WindowRange = {
 
 
 export const formatDateRangeString = ({startDate, startDay, startTime, endDate, endDay, endTime}) => {
-
-  const overnight = startDate.hour > 12  && endDate.hour < 12
+  const overnight = startDate.hour > 12 && endDate.hour < 12
   const closeTogether = startDate.plus({days: 1}).toFormat('EEE') === endDay && overnight
 
-  let range = `${startDay}, ${startTime} - ${endDay}, ${endTime}`
   if (startDay === endDay || closeTogether) {
     if (startTime === endTime) {
-      range = `${startDay}, ${startTime}`
+      return `${startDay}, ${startTime}`
     } else {
-      range = `${startDay}, ${startTime} - ${endTime}`
+      return `${startDay}, ${startTime} - ${endTime}`
     }
   }
 
-  return range
+  return `${startDay}, ${startTime} - ${endDay}, ${endTime}`
 }
 
 
@@ -69,7 +67,6 @@ export const getSummary = (hourly: Hourly[]): WindowRange[] => {
     return { date, day, time, temp: roundedTemp, isPrecipitation, chanceOfPrecipitation, main }
   })
   .reduce((acc, {date, day, time, temp, isPrecipitation, main, chanceOfPrecipitation}, index, list) => {
-    // find windows of precipitation, and join them for a summary.
     if (isPrecipitation && chanceOfPrecipitation > 20) {
       const newWindow = {
         startDate: date,
@@ -105,10 +102,7 @@ export const getSummary = (hourly: Hourly[]): WindowRange[] => {
     return acc
   }, [])
   .map(({startDate, startDay, startTime, endDate, endDay, endTime, main, lowTemp, chanceOfPrecipitation}) => {
-
-
     const range = formatDateRangeString({startDate, startDay, startTime, endDate, endDay, endTime})
-
     return {
       startDate,
       endDate,
