@@ -1,4 +1,3 @@
-import { middyfy } from '@libs/lambda';
 import { sendMessage } from '@libs/notification';
 import { getHourlyForecast, getSummary } from '@libs/openweather';
 import { response } from '@libs/response';
@@ -24,4 +23,4 @@ const weather = async () => {
   }
 };
 
-export const main = middyfy(weather);
+export default weather

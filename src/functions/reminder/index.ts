@@ -14,7 +14,7 @@ export default {
     },
     {
       schedule: {
-        rate: ['cron(16 0 ? * * *)'], // check at 10am
+        rate: ['cron(0 16 ? * * *)'], // check at 10am
         input: {
           hours: 4, // and look until 5pm
           reminderTime: 'noon'
