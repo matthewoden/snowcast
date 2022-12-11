@@ -23,4 +23,4 @@ const weather = async () => {
   }
 };
 
-export default weather
+export const main = weather
